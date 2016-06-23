@@ -1,0 +1,33 @@
+{
+  "name": "webhook-forwarder",
+  "version": "1.0.0",
+  "description": "simple webhook forwarder with subscribe and auto cleanup",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "request": "^2.72.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vigour-io/webhook-forwarder.git"
+  },
+  "keywords": [
+    "webhooks",
+    "travis",
+    "github",
+    "forwarder"
+  ],
+  "author": "vigour",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vigour-io/webhook-forwarder/issues"
+  },
+  "homepage": "https://github.com/vigour-io/webhook-forwarder#readme"
+}

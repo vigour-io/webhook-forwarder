@@ -22,19 +22,24 @@ server.on('request', function (req, res) {
     handleHook(endpoint, req, res)
   } else if (req.method === 'GET') {
     if (endpoint === SUBSCRIBE) { /* subscribe request */
-      const query = querystring.parse(request.query)
-      handleSubscribe(query, req, res)
+      console.log('subscribe request', request)
+      if (request.query) {
+        const query = querystring.parse(request.query)
+        handleSubscribe(query, req, res)
+      } else {
+        respond(400)
+      }
     } else if (endpoint === STATUS) { /* status request */
-      respond(JSON.stringify(subscribers.list))
+      respond(200, JSON.stringify(subscribers.list))
     } else { /* random GET request */
-      respond()
+      respond(200)
     }
   } else { /* random other method request */
-    respond()
+    respond(200)
   }
 
-  function respond (str) {
-    res.writeHead(200)
+  function respond (code, str) {
+    res.writeHead(code)
     if (str) { res.write(str) }
     res.end()
   }

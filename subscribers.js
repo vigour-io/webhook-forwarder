@@ -1,5 +1,7 @@
 'use strict'
 
+const urlUtil = require('url')
+
 const list = {}
 
 module.exports = {
@@ -13,12 +15,12 @@ function add (subscriber) {
   if (!endpointList) {
     list[endpoint] = endpointList = {}
   }
-  endpointList[url] = true
+  const parsedUrl = urlUtil.parse(url)
+  parsedUrl.strikes = 10
+  endpointList[url] = parsedUrl
 }
 
-function remove (subscriber) {
-  const url = subscriber.url
-  const endpoint = subscriber.endpoint
+function remove (endpoint, url) {
   const endpointList = list[endpoint]
   if (endpointList && endpointList[url]) {
     delete endpointList[url]
@@ -26,5 +28,5 @@ function remove (subscriber) {
 }
 
 function load () {
-  // load subscribers from storage
+  // load subscribers from database
 }
