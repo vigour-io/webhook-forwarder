@@ -1,17 +1,43 @@
 'use strict'
 
 const http = require('http')
+const urlUtil = require('url')
+const querystring = require('querystring')
 
-var server = module.exports = http.createServer()
+const handleSubscribe = require('./handle-subscribe')
+const handleHook = require('./handle-hook')
+const subscribers = require('./subscribers')
+
+const server = module.exports = http.createServer()
+const SUBSCRIBE = '/subscribe'
+const STATUS = '/status'
 
 server.on('request', function (req, res) {
-  if (req.method !== 'OPTIONS') {
-    console.log('got a request!', req.path)
-  }
-  res.writeHead(200)
+  const request = urlUtil.parse(req.url)
+  const endpoint = request.pathname
 
-  res.write('this is simple-http-example with id ' + service.id.val)
-  res.end()
+  console.log('got request on', endpoint)
+
+  if (req.method === 'POST') { /* hook request */
+    handleHook(endpoint, req, res)
+  } else if (req.method === 'GET') {
+    if (endpoint === SUBSCRIBE) { /* subscribe request */
+      const query = querystring.parse(request.query)
+      handleSubscribe(query, req, res)
+    } else if (endpoint === STATUS) { /* status request */
+      respond(JSON.stringify(subscribers.list))
+    } else { /* random GET request */
+      respond()
+    }
+  } else { /* random other method request */
+    respond()
+  }
+
+  function respond (str) {
+    res.writeHead(200)
+    if (str) { res.write(str) }
+    res.end()
+  }
 })
 
 server.on('error', function (err) {
