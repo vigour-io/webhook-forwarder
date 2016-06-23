@@ -2,9 +2,11 @@
   "name": "webhook-forwarder",
   "version": "1.0.0",
   "description": "simple webhook forwarder with subscribe and auto cleanup",
-  "main": "index.js",
+  "main": "./lib/server.js",
   "directories": {
-    "example": "example"
+    "example": "example",
+    "bin": "bin",
+    "lib": "lib"
   },
   "dependencies": {
     "debug": "^2.2.0",
@@ -17,7 +19,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
+    "start": "./bin/webhook-forwarder",
     "example": "DEBUG=* node example/subscriber"
   },
   "repository": {
