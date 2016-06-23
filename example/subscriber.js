@@ -1,5 +1,9 @@
 'use strict'
 
+const Debug = require('debug')
+const log = Debug('example')
+log.error = Debug('error')
+
 const http = require('http')
 const request = require('request')
 const urlUtil = require('url')
@@ -14,12 +18,16 @@ const MYURL = 'http://' + MYIP + ':' + MYPORT + '/' + ENDPOINT
 const SUBSURL = 'http://' + FWIP + ':' + FWPORT + '/subscribe'
 const HOOKURL = 'http://' + FWIP + ':' + FWPORT + '/' + ENDPOINT
 
-console.log('I am an example subscriber to the webhook-forwarder')
-console.log('I will subscribe using', SUBSURL)
-console.log('giving endpoint', ENDPOINT)
-console.log('and forward url', MYURL)
+const BADPOINT = 'wrong'
+const BADURL = 'http://' + MYIP + ':' + MYPORT + '/' + BADPOINT
 
-console.log('Webhooks posted to', HOOKURL, 'will be forwarded to ', MYURL)
+log('info', 'I am an example subscriber to the webhook-forwarder')
+log('info', 'I will subscribe using', SUBSURL)
+log('info', 'giving endpoint', ENDPOINT)
+log('info', 'and forward url', MYURL)
+log('info', 'Webhooks posted to', HOOKURL, 'will be forwarded to ', MYURL)
+
+log('info', 'for error simulation, I will subscribe to', BADPOINT, 'requests to', BADURL, 'will result in 503 response')
 
 const server = http.createServer()
 
@@ -27,54 +35,71 @@ server.on('request', function (req, res) {
   const request = urlUtil.parse(req.url)
   const endpoint = request.pathname
 
-  console.log('got request on', endpoint)
+  log(':', 'got request on', endpoint)
 
   if (req.method === 'POST') { /* hook request */
-    console.log('its a POST request!')
+    log(':', 'its a POST request!')
     var payload = ''
     req.on('data', function onData (chunk) {
       payload += chunk.toString()
     })
     req.on('end', function onEnd () {
-      console.log('got the data!')
+      log(':', 'got the data!')
       try {
-        console.log(JSON.parse(payload))
+        log(':', JSON.parse(payload))
       } catch (err) {
-        console.log('error parsing payload:', err)
+        log(':', 'error parsing payload:', err)
       }
-      respond('thanks!')
+      const request = urlUtil.parse(req.url)
+      const endpoint = request.pathname.slice(1)
+
+      if (endpoint === BADPOINT) {
+        respond(503, 'ueueueueueuhhh')
+      } else {
+        respond(200, 'thanks!')
+      }
     })
   } else {
-    respond('i am example subscriber!')
+    respond(200, 'i am example subscriber!')
   }
 
-  function respond (str) {
-    res.writeHead(200)
+  function respond (code, str) {
+    res.writeHead(code)
     if (str) { res.write(str) }
     res.end()
   }
 })
 
 server.listen(5701)
-console.log('listening on 5701')
-console.log('subscribing!')
+log(':', 'listening on 5701')
+log(':', 'subscribing!')
 
-const options = {
-  url: SUBSURL,
-  method: 'GET',
-  qs: {
-    endpoint: ENDPOINT,
-    url: MYURL
+subscribe(SUBSURL, ENDPOINT, MYURL)
+subscribe(SUBSURL, BADPOINT, BADURL)
+
+function subscribe (subsurl, endpoint, myurl) {
+  const options = {
+    url: subsurl,
+    method: 'GET',
+    qs: {
+      endpoint: endpoint,
+      url: myurl
+    }
   }
+
+  log(':', 'options:\n', options)
+  request(options, function (error, response, body) {
+    const status = !error && response.statusCode
+    if (status === 200) {
+      log(':', 'subscribe was ok!')
+      log(':', 'response:', body)
+    } else {
+      log.error('subscribe failed! :(')
+      if (error) {
+        log.error('request error:', error)
+      } else {
+        log.error('response:', status, body)
+      }
+    }
+  })
 }
-
-console.log('options', options)
-request(options, function (error, response, body) {
-  const status = response.statusCode
-  if (!error && status === 200) {
-    console.log('subscribe was ok!')
-    console.log(body)
-  } else {
-    console.log('subscribe failed! :(', status, body)
-  }
-})

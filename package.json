@@ -6,13 +6,19 @@
   "directories": {
     "example": "example"
   },
-  "dependencies": {},
+  "dependencies": {
+    "debug": "^2.2.0",
+    "loglevel": "^1.4.1",
+    "loglevel-debug": "0.0.1",
+    "yargs": "^4.7.1"
+  },
   "devDependencies": {
     "request": "^2.72.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node index.js",
+    "example": "DEBUG=* node example/subscriber"
   },
   "repository": {
     "type": "git",
