@@ -1,6 +1,6 @@
 {
   "name": "webhook-forwarder",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "simple webhook forwarder with subscribe and auto cleanup",
   "main": "./lib/server.js",
   "directories": {
