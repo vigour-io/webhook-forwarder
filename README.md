@@ -2,15 +2,24 @@
 
 ## Install
 
+### npm
 ```
 npm i -g webhook-forwarder
+```
+```
+webhook-forwarder [OPTIONS]
+```
+### github
+
+```
+git clone git@github.com:vigour-io/webhook-forwarder.git &&\
+cd webhook-forwarder &&\
+npm i &&\
+npm start -- [OPTIONS]
 ```
 
 ## Usage
 
-```
-webhook-forwarder [OPTIONS]
-```
 
 ### Options
 
