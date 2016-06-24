@@ -1,4 +1,5 @@
 # Webhook-forwarder
+simple webhook forwarder with subscribe and auto cleanup.
 
 ## Install
 
@@ -27,8 +28,8 @@ npm start -- [OPTIONS]
 | --- | --- | --- |
 | -p | --port | The port used to listen for incoming webhooks and `/subscribe` requests |
 | -s | --strikes | The amount of times a subscriber is allowed to be unresponsive at a hook forward. <br> When no strikes are left, the subscriber is removed, when responsive, strikes are reset. |
-| -d | --database.url | Redis database server to connect to for storing subscription info (true defaults to 127.0.0.1:6379) |
-| -w | --database.password | Password to your Redis database server |
+| -d | --database.url | Redis database server to connect to for storing subscription info (true defaults to `127.0.0.1:6379`) |
+| -w | --database.password | Password to your Redis server |
 | -l | --database.label | Identifier used to grab a namespace within the database |
 | -h | --help | Show help |
 
@@ -54,7 +55,7 @@ Used to subscribe to a webhook endpoint, meaning all webhooks landing on this en
 #### Parameters:
 
 | parameter | description | example |
-| --- | --- |
+| --- | --- | --- |
 | endpoint | All webhooks landing on this endpoint should be forwarded to the subscriber | `travis` |
 | url | The url that the webhooks should be forwarded to | `http://forward-to.me/travis` <br> URI encoded <br> `http%3A%2F%2Fforward-to.me%2Ftravis` |
 
