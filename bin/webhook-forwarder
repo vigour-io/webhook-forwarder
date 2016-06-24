@@ -1,9 +1,3 @@
-#!/usr/bin/env node
-'use strict'
-const log = require('debug')('main')
-const config = require('../lib/config')
-const server = require('../lib/server')
-const port = config.port
+#!/bin/bash
 
-log('starting server', 'port', port)
-server.listen(port)
+node ../index
