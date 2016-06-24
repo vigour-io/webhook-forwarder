@@ -63,6 +63,18 @@ Used to subscribe to a webhook endpoint, meaning all webhooks landing on this en
 ```
 http://my-webhook-forwarder.com/subscribe?endpoint=travis&url=http%3A%2F%2Fforward-to.me%2Ftravis
 ```
+Easy way to get these query strings URI encoded:
+```JavaScript
+const querystring = require('querystring')
+
+const exampleString = querystring.stringify({
+  endpoint: 'travis',
+  url: 'http://forward-to.me/travis'
+})
+
+// exampleString is now
+// "endpoint=travis&url=http%3A%2F%2Fforward-to.me%2Ftravis"
+```
 
 ### Webhooks
 Any `POST` requests landing on the forwarder will be accepted, and if there is a subscriber for the endpoint the hookshot was fired on, it will be forwarded.
