@@ -1,3 +1,2 @@
-#!/bin/bash
-
-node ../index
+#!/usr/bin/env node
+require('../index')
